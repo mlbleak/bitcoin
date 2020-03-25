@@ -2,7 +2,6 @@
 clc; clear all; close all;
 which = 1:10
 graph = 1
-leg = {};
 
 %% instructions:
 %   models holds the different polynomial combinations you can 
@@ -11,11 +10,10 @@ leg = {};
 %       Ax + B
 %       Ax^2 + Bx + C
 %       Ax^3 + Bx^2 +Cx + D
-%   [1 3] will create the models for the following equations:
-%       Ax + B
-%       0x^2 + 0x + 0
-%       Ax^3 + Bx^2 +Cx + D
 models = [1:7];
+
+%
+leg = {};
 
 
 
