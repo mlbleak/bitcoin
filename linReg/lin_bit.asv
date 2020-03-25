@@ -1,0 +1,101 @@
+%% Setting up Environment
+clc; clear all; close all;
+which = 1:10
+graph = 1
+
+
+
+%% Establishing Variables
+price = readmatrix("../data/train.csv");
+t = price(:,1)';
+t = t-42843;
+price = price(:,3)';
+
+if graph == 1
+    plot(t,price); grid
+    hold on;
+end
+
+
+
+%% Different Linear Regression Models:
+models = 1:13;
+funy = zeros(length(models)
+for models = 1:13
+    [funy,r2] = polyReg(models,t,y);
+end
+
+
+
+%% LSR- Linear
+if any(which == 2)
+    X = [t',ones(length(t),1)];
+    lcoeff = inv(X'*X)*X'*price';
+    llcoeff = inv(X'*X)*X'*log(price)';
+    
+    slr  = lcoeff(1).*t_test+lcoeff(2);
+    slrl = llcoeff(1).*t_test+log(lcoeff(2));
+    if graph == 1
+        figure(1)
+        plot(t_test,slr);
+        hold on
+        %leg3{length(leg3)+1} = 'Linear Regression Model';
+        
+        figure(4)
+        plot(t_test,slrl);
+        hold on
+        %leg4{length(leg4)+1} = 'Linear Regression Model';
+    end
+end
+
+%% LSR- x^3
+if any(which == 3)
+    X = [t.^3',t.^2',t',ones(length(t),1)];
+    lcoeff = inv(X'*X)*X'*price';
+    llcoeff = inv(X'*X)*X'*log(price)';
+    
+    slr  = lcoeff(1).*t_test.^3+lcoeff(2).*t_test.^2+lcoeff(3).*t_test+lcoeff(4);
+    slrl = llcoeff(1).*t_test+log(lcoeff(2));
+    if graph == 1
+        figure(1)
+        plot(t_test,slr);
+        hold on
+        %leg3{length(leg3)+1} = 'Linear Regression Model';
+        
+        %figure(4)
+        %plot(t_test,slrl);
+        %hold on
+        %leg4{length(leg4)+1} = 'Linear Regression Model';
+    end
+end
+
+%% LSR- x^5
+
+%% LSR- x^7
+if any(which == 4)
+    X = [t.^7',t.^6',t.^5',t'.^4,t.^3',t.^2',t',ones(length(t),1)];
+    lcoeff = inv(X'*X)*X'*price';
+    %llcoeff = inv(X'*X)*X'*log(price)';
+    
+    slr  = lcoeff(1).*t_test.^7+lcoeff(2).*t_test.^6+lcoeff(3).*t_test.^5 ...
+            +lcoeff(4).*t_test.^4+lcoeff(5).*t_test.^3+lcoeff(6).*t_test.^2 ...
+            +lcoeff(7).*t_test+lcoeff(8);
+    %slrl = llcoeff(1).*t_test+log(lcoeff(2));
+    if graph == 1
+        figure(1)
+        plot(t_test,slr);
+        hold on
+        %leg3{length(leg3)+1} = 'Linear Regression Model';
+        
+        %figure(4)
+        %plot(t_test,slrl);
+        %hold on
+        %leg4{length(leg4)+1} = 'Linear Regression Model';
+    end
+end
+
+
+price2 = readmatrix("../data/test.csv");
+t2 = price2(:,1)';
+t2 = t2-42843;
+price2 = price2(1:402,2)';
