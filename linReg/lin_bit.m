@@ -15,16 +15,20 @@ leg = {};
 %       Ax + B
 %       0x^2 + 0x + 0
 %       Ax^3 + Bx^2 +Cx + D
-models = [1:7];
+models = [1:2:7];
+
+%   scale allows higher-polynomial functions to still be
+%   used. The high numbers of t affected the evaluation of
+%   t^7 or t^11 too much for regression to be useful.
+scale = 100;
 
 
 
 %% Establishing Variables
 price = readmatrix("../data/train.csv");
 t = price(:,1)';
-t = t-42843;
+t = (t-42843)/scale;
 price = price(:,3)';
-%t = flip(t);
 
 if graph == 1
     plot(t,price); grid
@@ -32,30 +36,77 @@ if graph == 1
     hold on;
 end
 
-%% Executing:
 
+
+%% Executing:
 funy = zeros(max(models),max(models)+1);
 r2 = zeros(length(models),1);
 for model = models
     [funy(model,end-model:end),r2(model)] = polyReg(model,t,price);
     leg{length(leg)+1} = num2str(model);
 end
+
+
+
+
+%% Show Results
 x = zeros(length(t),max(models)+1);
 for i = 0:max(models)
     x(:,end-i) = t.^i;
 end
-
+disp("Coefficients")
 disp(funy);
+disp("r^2")
+disp(r2')
 
 out = x*funy';
 if graph == 1
-    plot(t,out);
+    for i = models
+        plot(t,out(:,i));
+    end
 end
-%% Comparing
-
 legend(leg)
 
 
+
+%% Cmp to test:
+shft = .4;
+
+test = readmatrix("../data/test.csv");
+tt = test(:,1)';
+tt = tt/scale;
+test = test(:,3)';
+disp(tt(1));
+figure
+plot(tt,test);
+hold on;
+
+disp("here")
+
+% Sets the matrix up for plot display
+x = zeros(length(tt),max(models)+1);
+for i = 0:max(models)
+    x(:,end-i) = (tt+shft).^i;
+end
+
+
+% calculates the mean r^2 error
+tout = x*funy';
+tr2 = zeros(max(models),1);
+for i = 1:max(models)
+    tr2(i) = mean((test-tout(:,i)').^2);
+end
+
+disp("tr^2")
+disp(tr2')
+
+if graph == 1
+    for i = models
+        plot(tt,tout(:,i));
+    end
+end
+disp(tout(1:15))
+legend(leg)
 
 
 
