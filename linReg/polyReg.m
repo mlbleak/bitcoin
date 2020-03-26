@@ -16,6 +16,6 @@ function [fun,r2] = polyReg(sz,t,y)
     end
     
     fun = pinv(x'*x)*x'*y';
-    r2 = mean((y-(x*fun)').^2);
+    r2 = mean(((y-(x*fun)')./y).^2);
 end
 

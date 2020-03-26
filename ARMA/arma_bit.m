@@ -15,7 +15,7 @@ t = price(:,1)';
 t_test = [0.5:10:600.5,601.5:2:620.5]/scale;
 t = (t-42843)/scale;
 price = price(:,3)';
-gprweight = 10^8;
+gprweight = 10^1;
 
 %% get Models:
 [mufs, sigmafs] = gpr(t,price,t_test,5*scale^(-.5));

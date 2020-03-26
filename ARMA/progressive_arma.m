@@ -6,7 +6,7 @@ addpath('../gpr');
 
 
 %% Presets:
-polynomial = 1;
+polynomial = 2;
 %   scale allows higher-polynomial functions to still be
 %   used. The high numbers of t affected the evaluation of
 %   t^7 or t^11 too much for regression to be useful.
@@ -15,10 +15,10 @@ price = readmatrix("../data/train.csv");
 t = price(:,1)';
 t = (t-42843)/scale;
 price = price(:,3)';
-gprweight = 10^6;
+gprweight = 10^-1.6;
 tt = zeros(size(t));
 pp = zeros(size(price));
-k = 15;
+k = 10;
 
 w_avg = zeros(size(t));
 for i = 1:k-1
@@ -48,14 +48,13 @@ for i = k:length(t)-1
     
     weight(i) = sigma*gprweight/(sigma*gprweight+r2);
     w_avg(i+1) = (1-weight(i))*mu+x*fx*weight(i);
-    %w_avg(i) = x*fx;
 end
 
 disp([mean(weight);var(weight);]);
 
 plot(t,price); grid;
 hold on;
-plot(t,w_avg);
+plot(t(2:end),w_avg(2:end));
 hold on;
 
 perr = sum(((w_avg(k+1:end)-price(k+1:end))./price(k+1:end)).^2);
