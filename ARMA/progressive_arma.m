@@ -15,10 +15,11 @@ price = readmatrix("../data/train.csv");
 t = price(:,1)';
 t = (t-42843)/scale;
 price = price(:,3)';
-gprweight = 10^-1;
+gprweight = 10^.3;
 tt = zeros(size(t));
 pp = zeros(size(price));
 k = 10;
+l = 20;
 
 w_avg = zeros(size(t));
 for i = 1:k-1
@@ -30,6 +31,7 @@ end
 
 %% get Models:
 weight = zeros(size(t));
+mux = zeros(size(t));
 s = zeros(size(t));
 for i = k:length(t)-1
     tt(i) = t(i);
@@ -38,8 +40,8 @@ for i = k:length(t)-1
     point = t(i+1);
     knn = tt(i-k+1:i);
     [fx,r2] = polyReg(polynomial,knn,pp(i-k+1:i));
-    [mu,sigma] = gpr(tt(1:i),pp(1:i),t(i+1),5*scale^(-.5));
-    
+    [mu,sigma] = gpr(tt(1:i),pp(1:i),t(i+1),l*scale^(-.5));
+    mux(i+1) = mu;
     x = zeros(1,polynomial+1);
     for j = 0:polynomial
         x(:,end-j) = point^j;
@@ -55,6 +57,8 @@ disp([mean(weight);var(weight);]);
 plot(t,price); grid;
 hold on;
 plot(t(2:end),w_avg(2:end));
+hold on;
+plot(t(2:end),mux(2:end));
 hold on;
 
 perr = sum(((w_avg(k+1:end)-price(k+1:end))./price(k+1:end)).^2);
